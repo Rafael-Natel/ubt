@@ -80,9 +80,12 @@ class Player extends FlxSprite
 
 	public override function update(elapsed:Float):Void
 	{
-		if ((_state == PUNCH_LEFT || _state == PUNCH_RIGHT || _state == PUNCHSTRONG_RIGHT || _state == PUNCHSTRONG_LEFT || _state == GUARD_LEFT || _state == GUARD_RIGHT) && !animation.finished) {
-			super.update(elapsed);
-			return;
+		if (_state != LEFT && _state != RIGHT &&
+		_state != IDLE_LEFT && _state != IDLE_RIGHT) {
+			if (!animation.finished) {
+				super.update(elapsed);
+				return;
+			}
 		}
 
 		// Reset to 0 when no button is pushed
@@ -132,9 +135,9 @@ class Player extends FlxSprite
              } else {
                     _state = PUNCHSTRONG_LEFT;
                     animation.play("punch-strong-left");
-                    }
+             }
         }
-        
+
         if (FlxG.keys.anyPressed([D])) {
             if (_state == RIGHT || _state == IDLE_RIGHT) {
                 _state = GUARD_RIGHT;
@@ -144,7 +147,7 @@ class Player extends FlxSprite
                 animation.play("guard-left");
             }
         }
-        
+
 		if (velocity.y < 0)
 		{
 			animation.play("jump");
