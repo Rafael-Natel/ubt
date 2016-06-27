@@ -90,7 +90,7 @@ class PlayState extends FlxState
 		add(shine);
 
 		// our guy for the player to move
-		add(player = new Player(300, 0));
+		add(player = new Player(300, 0, RIGHT));
 
 
 		var txtInst:FlxText = new FlxText(0, FlxG.height - 16, FlxG.width, "Left/Right to Move | K to Punch");
@@ -162,8 +162,6 @@ class PlayState extends FlxState
 
 	private function bakeColors(color:FlxColor, asset:String, ?alpha:Float = 1):String
 	{
-		trace(asset);
-
 		var bmpData:BitmapData = FlxG.bitmap.get(asset).bitmap.clone();
 
 		var colorTransform:ColorTransform = new ColorTransform();
