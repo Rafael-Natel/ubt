@@ -21,11 +21,7 @@ class SelectState extends FlxState {
 	private var _currentChar:Bool; // true == char1, false == char2;
 
 	override public function create():Void {
-		// Fade in to the scene from black
-		FlxG.cameras.flash(FlxColor.BLACK, 1);
-
-		// Show our mouse!
-		FlxG.mouse.visible = true;
+        
 		_base = new FlxSprite();
 		_base.loadGraphic("assets/art/PlayerSelect.png");
 		add(_base);
@@ -65,7 +61,7 @@ class SelectState extends FlxState {
 		var y = FlxG.height/2+50;
 
 		_char2Sprite = new FlxSprite(x, y);
-		_char2Sprite.loadGraphic("assets/art/iconPlayer.png");
+		_char2Sprite.loadGraphic("assets/art/iconPlayer2.png");
 
 		add(_char2Sprite);
 	}
@@ -92,10 +88,10 @@ class SelectState extends FlxState {
 
 		if (_currentChar) {
 			_char1Sprite.loadGraphic("assets/art/iconPlayerSelected.png");
-			_char2Sprite.loadGraphic("assets/art/iconPlayer.png");
+			_char2Sprite.loadGraphic("assets/art/iconPlayer2.png");
 		} else {
 			_char1Sprite.loadGraphic("assets/art/iconPlayer.png");
-			_char2Sprite.loadGraphic("assets/art/iconPlayerSelected.png");
+			_char2Sprite.loadGraphic("assets/art/iconPlayer2Selected.png");
 		}
 
 		if (FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN) {

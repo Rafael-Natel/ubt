@@ -21,10 +21,6 @@ enum State {
     GUARD_LEFT;
 }
 
-/**
- * ...
- * @author David Bell
- */
 class Player extends FlxSprite
 {
 	public static inline var RUN_SPEED:Int = 90;

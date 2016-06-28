@@ -1,4 +1,4 @@
-﻿package;
+package;
 
 import flixel.FlxGame;
 import openfl.display.Sprite;
@@ -8,6 +8,6 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		addChild(new FlxGame(1024, 768, MenuState));
+		addChild(new FlxGame(1280, 768, MenuState));
 	}
 }

@@ -29,7 +29,6 @@ class Player extends FlxSprite
 {
 	public static inline var RUN_SPEED:Int = 90;
 	public static inline var GRAVITY:Int = 440;
-	public static inline var JUMP_SPEED:Int = 500;
 	public static inline var BULLET_SPEED:Int = 200;
 	public static inline var GUN_DELAY:Float = 0.4;
 
@@ -63,23 +62,52 @@ class Player extends FlxSprite
         animation.add("jump-kick-left", [224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240] false);
         animation.add("punch-strong-left", [241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267], 40, false);
         animation.add("lose-left", [268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287], false);
-
-		animation.callback = function(name:String, frameNum:Int, frameIndex:Int) {
+        
+		/*animation.callback = function(name:String, frameNum:Int, frameIndex:Int) {
 			trace("Name: ", name, ", frameNum: ", frameNum, ", frameIndex: ", frameIndex);
-		};
+			};*/
 
 		drag.set(RUN_SPEED * 10, RUN_SPEED * 10);
-		maxVelocity.set(RUN_SPEED, JUMP_SPEED);
+		maxVelocity.set(RUN_SPEED, 0);
 		acceleration.y = GRAVITY;
 		//setSize(500, 100);
 		offset.set(3, 4);
 
 	}
 
+	private function safePositions() {
+		if (this.x > 740){
+			this.x = 739;
+		}
+		if (this.x <= 1){
+			this.x = 2;
+		}
+		if (this.y > 450){
+			this.y = 450;
+		}
+	}
+
+	private function handleXMovement():Void {
+		if (velocity.x > 0) {
+			_state = RIGHT;
+			animation.play("walking-right");
+		} else if (velocity.x < 0) {
+			_state = LEFT;
+			animation.play("walking-left");
+        } else if (velocity.x == 0){
+            if (isRight()) {
+				_state = IDLE_RIGHT;
+				animation.play("idle-right");
+			} else {
+				_state = IDLE_LEFT;
+				animation.play("idle-left");
+            }
+		}
+	}
+
 	public override function update(elapsed:Float):Void
 	{
-		if (_state != LEFT && _state != RIGHT &&
-		_state != IDLE_LEFT && _state != IDLE_RIGHT) {
+		if (isFighting()) {
 			if (!animation.finished) {
 				super.update(elapsed);
 				return;
@@ -98,27 +126,12 @@ class Player extends FlxSprite
 			acceleration.x = drag.x;
 		}
 
-		jump(elapsed);
-
 		// Animations
-		if (velocity.x > 0) {
-			_state = RIGHT;
-			animation.play("walking-right");
-		} else if (velocity.x < 0) {
-			_state = LEFT;
-			animation.play("walking-left");
-        } else if (velocity.x == 0){
-            if (_state == RIGHT || _state == IDLE_RIGHT) {
-				_state = IDLE_RIGHT;
-				animation.play("idle-right");
-			} else {
-				_state = IDLE_LEFT;
-				animation.play("idle-left");
-            }
-		  }
+
+		handleXMovement();
 
 		if (FlxG.keys.anyPressed([A])) {
-			if (_state == RIGHT || _state == IDLE_RIGHT) {
+			if (isRight()) {
 				_state = PUNCH_RIGHT;
 				animation.play("punch-right");
 			} else {
@@ -127,17 +140,17 @@ class Player extends FlxSprite
 			 }
         }
         if (FlxG.keys.anyPressed([S])) {
-            if (_state == RIGHT || _state == IDLE_RIGHT) {
+            if (isRight()) {
                 _state = PUNCHSTRONG_RIGHT;
                 animation.play("punch-strong-right");
              } else {
-                    _state = PUNCHSTRONG_LEFT;
-                    animation.play("punch-strong-left");
+				_state = PUNCHSTRONG_LEFT;
+				animation.play("punch-strong-left");
              }
         }
 
         if (FlxG.keys.anyPressed([D])) {
-            if (_state == RIGHT || _state == IDLE_RIGHT) {
+            if (isRight()) {
                 _state = GUARD_RIGHT;
                 animation.play("guard-right");
             } else {
@@ -146,32 +159,9 @@ class Player extends FlxSprite
             }
         }
 
-		if (velocity.y < 0)
-		{
-			animation.play("jump");
-		}
-		if (this.x > 740){
-			this.x = 739;
-		}
-		if (this.x <= 1){
-			this.x = 2;
-		}
-		if (this.y > 450){
-			this.y = 450;
-		}
+		safePositions();
 
 		super.update(elapsed);
-	}
-
-	private function jump(elapsed:Float):Void
-	{
-		if (FlxG.keys.anyJustPressed([SPACE]))
-		{
-			if ((velocity.y == 0)) {
-				//FlxG.sound.play("assets/sounds/jump" + Reg.SoundExtension, 1, false);
-				velocity.y = - 0.6 * maxVelocity.y;
-			}
-		}
 	}
 
 	override public function kill():Void
@@ -188,5 +178,41 @@ class Player extends FlxSprite
 
 
 		FlxG.sound.play("assets/sounds/death" + Reg.SoundExtension, 1, false);
+	}
+
+	private function isLeft():Bool {
+		if (_state == LEFT || _state == IDLE_LEFT || _state == PUNCH_LEFT ||
+		_state == PUNCHSTRONG_LEFT || _state == GUARD_LEFT) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private function isRight():Bool {
+		if (_state == RIGHT || _state == IDLE_RIGHT || _state == PUNCH_RIGHT ||
+		_state == PUNCHSTRONG_RIGHT || _state == GUARD_RIGHT) {
+			return true;
+		}
+
+		return false;
+	}
+
+    private function isFighting():Bool {
+		if (_state == PUNCH_LEFT || _state == PUNCH_RIGHT ||
+		_state == PUNCHSTRONG_LEFT || _state == PUNCHSTRONG_RIGHT) {
+			return true;
+		}
+
+		return false;
+    }
+
+	private function setIdle() {
+		if(_state == PUNCH_LEFT || _state == PUNCHSTRONG_LEFT ||
+		_state == GUARD_LEFT || _state == LEFT) {
+			_state = IDLE_LEFT;
+		} else {
+			_state = IDLE_RIGHT;
+		}
 	}
 }
