@@ -25,11 +25,8 @@ class Player extends FlxSprite
 {
 	public static inline var RUN_SPEED:Int = 90;
 	public static inline var GRAVITY:Int = 440;
-	public static inline var BULLET_SPEED:Int = 200;
-	public static inline var GUN_DELAY:Float = 0.4;
 
-
-	private var _parent:PlayState;
+    private var _parent:PlayState;
 	private var _state:State;
 
 	public function new(X:Int, Y:Int, state:State)
@@ -111,7 +108,6 @@ class Player extends FlxSprite
 				super.update(elapsed);
 				return;
 			}
-
 		}
 
 		// Reset to 0 when no button is pushed
