@@ -15,10 +15,9 @@ class PlayState extends FlxState
 	private var _baseY:Float;	// this is the starting Y position of our guy, we will use this to make the guy float up and down
 	private var _ground:FlxTileblock;
 	public var player1:Player;
-	public var player2:Player2;
+	public var player2:RemotePlayer;
 	private var _sprPlayer:Player;
 	private var _base:FlxSprite;
-    var numCollisions:Int = 0;
 
 	override public function create():Void
 	{
@@ -32,22 +31,26 @@ class PlayState extends FlxState
 		_ground.loadTiles("assets/art/chao1.png", 1278, 200);
 		add(_ground);
 
+		var s = new sys.net.Socket();
+
+        s.connect(new sys.net.Host("127.0.0.1"), 5000);
+
 		add(player1 = new Player(300, 200, RIGHT));
-		add(player2 = new Player2(600, 200, LEFT));
+		add(player2 = new RemotePlayer(600, 200, LEFT, s));
 
 		super.create();
 	}
 
 	override public function update(elapsed:Float):Void
 	{
-		numCollisions = 0;
 		FlxG.collide(player1, _ground);
 		FlxG.collide(player2, _ground);
 
-		FlxG.collide(player1, player2);
+		if(FlxG.overlap(player1, player2)) {
+			trace("collided!!!!!");
+		}
 
 		super.update(elapsed);
     }
 
 	}
-

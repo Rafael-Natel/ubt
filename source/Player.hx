@@ -49,7 +49,7 @@ class Player extends FlxSprite
         animation.add("lose-right", [72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92], false);
 
         animation.add("punch-strong-left", [93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112], 40, false);//112
-        animation.add("punch-strong-", [113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131], 40, false);//131
+        animation.add("punch-strong-right", [113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131], 40, false);//131
 		animation.add("punch-right", [132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161], 40, false);//161
         animation.add("punch-left", [162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191], 40, false);//191
         animation.add("jump-left", [192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212], 10, false);//212
@@ -113,12 +113,10 @@ class Player extends FlxSprite
 		// Reset to 0 when no button is pushed
 		acceleration.x = 0;
 
-		if (FlxG.keys.anyPressed([LEFT]))
-		{
+		if (FlxG.keys.anyPressed([LEFT])) {
 			acceleration.x = -drag.x;
 		}
-		else if (FlxG.keys.anyPressed([RIGHT]))
-		{
+		else if (FlxG.keys.anyPressed([RIGHT])) {
 			acceleration.x = drag.x;
 		}
 
@@ -135,6 +133,7 @@ class Player extends FlxSprite
 				animation.play("punch-left");
 			 }
         }
+
         if (FlxG.keys.anyPressed([S])) {
             if (isRight()) {
                 _state = PUNCHSTRONG_RIGHT;
