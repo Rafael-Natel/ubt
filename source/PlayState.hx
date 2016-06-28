@@ -29,7 +29,7 @@ class PlayState extends FlxState
 
 		// a tileblock of ground tiles - will move with the player
 		_ground = new FlxTileblock(0, FlxG.height - 64, FlxG.width * 4, 64);
-		_ground.loadTiles("assets/art/chao.png", 1278, 200);
+		_ground.loadTiles("assets/art/chao1.png", 1278, 200);
 		add(_ground);
 
 		add(player1 = new Player(300, 200, RIGHT));
