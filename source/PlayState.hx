@@ -28,13 +28,14 @@ using flixel.util.FlxSpriteUtil;
 class PlayState extends FlxState
 {
 
-    
+
 	private var _baseY:Float;	// this is the starting Y position of our guy, we will use this to make the guy float up and down
 	private var _flakes:FlxTypedGroup<Flake>; // a group of flakes
 	private var _vPad:FlxVirtualPad;
 	private var _ground:FlxTileblock;
 	private var _healthBar:FlxBar;
-	public var player:Player;
+	public var player1:Player;
+	public var player2:Player2;
 	public var enemy:Enemy;
 	private var _sprPlayer:Player;
 	private var _base:FlxSprite;
@@ -42,7 +43,7 @@ class PlayState extends FlxState
 
 	override public function create():Void
 	{
-        
+
         _base = new FlxSprite();
 		_base.loadGraphic("assets/art/Cenario.png");
 		add(_base);
@@ -66,25 +67,29 @@ class PlayState extends FlxState
 		shine.scrollFactor.set();
 		add(shine);
 
-		// our guy for the player to move
-		add(player = new Player(300, 200, RIGHT));
-        
+		add(player1 = new Player(300, 200, RIGHT));
+		add(player2 = new Player2(600, 200, LEFT));
+
 		// Set up our camera to follow the guy, and stay within the confines of our 'world'
-		FlxG.camera.follow(player);
+		//		FlxG.camera.follow(player);
 		FlxG.camera.setScrollBounds(0, FlxG.width, 0, FlxG.height);
 
 		super.create();
 	}
-    
+
 	override public function update(elapsed:Float):Void
 	{
 		numCollisions = 0;
-		FlxG.collide(player, _ground);
-		FlxG.collide(player, enemy);
+		FlxG.collide(player1, _ground);
+		FlxG.collide(player2, _ground);
+
+		FlxG.collide(player1, player2);
+
 		super.update(elapsed);
 
-		if  (FlxG.collide(player, enemy))
-		{FlxG.sound.play("assets/sounds/swordHead" + Reg.SoundExtension, 1, false);}
+		if  (FlxG.collide(player1, player2)) {
+			FlxG.sound.play("assets/sounds/swordHead" + Reg.SoundExtension, 1, false);
+		}
 
 	}
 }

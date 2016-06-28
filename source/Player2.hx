@@ -8,24 +8,12 @@ import flixel.group.FlxGroup;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 
-enum State {
-	LEFT;
-	RIGHT;
-	IDLE_LEFT;
-	IDLE_RIGHT;
-	PUNCH_LEFT;
-	PUNCH_RIGHT;
-    PUNCHSTRONG_RIGHT;
-    PUNCHSTRONG_LEFT;
-    GUARD_RIGHT;
-    GUARD_LEFT;
-}
-
+import Player;
 /**
  * ...
  * @author David Bell
  */
-class Player extends FlxSprite
+class Player2 extends FlxSprite
 {
 	public static inline var RUN_SPEED:Int = 90;
 	public static inline var GRAVITY:Int = 440;
@@ -59,10 +47,10 @@ class Player extends FlxSprite
         animation.add("walking-left", [161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184], 12, false);
   		animation.add("guard-left", [185, 186, 187, 188, 189, 190, 191, 192, 193, 194], false);
         animation.add("punch-left", [195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223], false);
-        animation.add("jump-kick-left", [224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240] false);
+        animation.add("jump-kick-left", [224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240], false);
         animation.add("punch-strong-left", [241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267], 40, false);
         animation.add("lose-left", [268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287], false);
-        
+
 		/*animation.callback = function(name:String, frameNum:Int, frameIndex:Int) {
 			trace("Name: ", name, ", frameNum: ", frameNum, ", frameIndex: ", frameIndex);
 			};*/
