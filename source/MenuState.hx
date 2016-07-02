@@ -9,7 +9,7 @@ import flash.system.System;
 import openfl.Assets;
 import flixel.effects.particles.FlxEmitter;
 
-enum Option
+enum MenuOption
 {
 	PLAY;
 	TUTORIAL;
@@ -26,7 +26,7 @@ class MenuState extends FlxState
 	private var _base:FlxSprite;
 
 	// This will indicate what the pointer is pointing at
-	private var _option:Option = PLAY;
+	private var _option:MenuOption = PLAY;
 
 	private var _menuChangeSound = "assets/sounds/sword1";
 	private var _menuFireSound   = "assets/sounds/sword1";
@@ -97,15 +97,15 @@ class MenuState extends FlxState
 
 	private function modifySelectedOption(modifier:Int):Void
 	{
-		var options = Option.getConstructors();
+		var options = MenuOption.getConstructors();
 		var index = options.indexOf(Std.string(_option)) + modifier;
-		_option = Option.createByIndex(FlxMath.wrap(index, 0, options.length - 1));
+		_option = MenuOption.createByIndex(FlxMath.wrap(index, 0, options.length - 1));
 
 		FlxG.sound.play(_menuChangeSound + Reg.SoundExtension, 1, false);
 	}
 
 	private function startGame():Void
 	{
-		FlxG.switchState(new SelectState());
+		FlxG.switchState(new ConfigState());
 	}
 }
