@@ -38,7 +38,7 @@ class Player extends FlxSprite
 
 		//Set up the graphics
 		loadGraphic("assets/art/sprite25.png", true, 354, 449);
-
+//Andar, Atacar Fraco, Atacar Forte, Defesa, Pulo, Pulo Chute, Pulo Espada
 		animation.add("walking-right", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 30, false);
         animation.add("walking-left", [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], 30, false);
 		animation.add("idle-right", [0]);
@@ -113,10 +113,12 @@ class Player extends FlxSprite
 		// Reset to 0 when no button is pushed
 		acceleration.x = 0;
 
-		if (FlxG.keys.anyPressed([LEFT])) {
+		if (FlxG.keys.anyPressed([LEFT]))
+		{
 			acceleration.x = -drag.x;
 		}
-		else if (FlxG.keys.anyPressed([RIGHT])) {
+		else if (FlxG.keys.anyPressed([RIGHT]))
+		{
 			acceleration.x = drag.x;
 		}
 
@@ -133,7 +135,6 @@ class Player extends FlxSprite
 				animation.play("punch-left");
 			 }
         }
-
         if (FlxG.keys.anyPressed([S])) {
             if (isRight()) {
                 _state = PUNCHSTRONG_RIGHT;

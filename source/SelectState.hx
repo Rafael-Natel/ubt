@@ -23,7 +23,7 @@ class SelectState extends FlxState {
 	override public function create():Void {
         
 		_base = new FlxSprite();
-		_base.loadGraphic("assets/art/PlayerSelect.png");
+		_base.loadGraphic("assets/art/TelaVersus.png");
 		add(_base);
 
 		setupBackBtn();
@@ -34,7 +34,7 @@ class SelectState extends FlxState {
 
 	private function setupBackBtn() {
 		// Add a button which will take us back to the main menu state
-		_backText = new FlxText(50, FlxG.height -50, 0, "Back");
+		_backText = new FlxText(50, 50, 0, "Back");
 		_backText.color = 0xFFCC00;
 		_backText.size = 25;
 		_backText.antialiasing = true;
@@ -48,20 +48,20 @@ class SelectState extends FlxState {
 	}
 
 	private function setupChar1Btn() {
-		var x = FlxG.width/2 - _charWidth;
-		var y = FlxG.height/2+50;
+		var x = 5;
+		var y = 100;
 
 		_char1Sprite = new FlxSprite(x, y);
-		_char1Sprite.loadGraphic("assets/art/iconPlayer.png");
+		_char1Sprite.loadGraphic("assets/art/Max.png");
 		add(_char1Sprite);
 	}
 
 	private function setupChar2Btn() {
-		var x = FlxG.width/2 + 1;
-		var y = FlxG.height/2+50;
+		var x = FlxG.width/2 + 100;
+		var y = 100;
 
 		_char2Sprite = new FlxSprite(x, y);
-		_char2Sprite.loadGraphic("assets/art/iconPlayer2.png");
+		_char2Sprite.loadGraphic("assets/art/Drax.png");
 
 		add(_char2Sprite);
 	}
@@ -87,11 +87,11 @@ class SelectState extends FlxState {
 		}
 
 		if (_currentChar) {
-			_char1Sprite.loadGraphic("assets/art/iconPlayerSelected.png");
-			_char2Sprite.loadGraphic("assets/art/iconPlayer2.png");
+			_char1Sprite.loadGraphic("assets/art/player1SelectMax.png");
+			_char2Sprite.loadGraphic("assets/art/Drax.png");
 		} else {
-			_char1Sprite.loadGraphic("assets/art/iconPlayer.png");
-			_char2Sprite.loadGraphic("assets/art/iconPlayer2Selected.png");
+			_char1Sprite.loadGraphic("assets/art/Max.png");
+			_char2Sprite.loadGraphic("assets/art/player1SelectDrax.png");
 		}
 
 		if (FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN) {

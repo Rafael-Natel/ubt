@@ -33,6 +33,8 @@ class MenuState extends FlxState
 
 	override public function create():Void
 	{
+		var skipSplash:Bool=true;
+
 		_base = new FlxSprite();
 		_base.loadGraphic("assets/art/menu.png");
 		add(_base);
@@ -59,7 +61,6 @@ class MenuState extends FlxState
 		add(_pointer);
 
 		FlxG.sound.play("assets/sounds/musicMenu" + Reg.SoundExtension, 1, true);
-
 		super.create();
 	}
 
