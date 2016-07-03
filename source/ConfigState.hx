@@ -194,7 +194,7 @@ class ConfigState extends FlxState
 		_player.setConnection(_connection);
 		_player.setIsLeft(_playerIsLeft);
 
-		FlxG.switchState(new SelectState(_player));
+		FlxG.switchState(new SelectState(_player, _serverIpAddr));
 	}
 
     private function verifyAndGo():Void {

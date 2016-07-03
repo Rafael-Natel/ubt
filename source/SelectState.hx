@@ -29,10 +29,12 @@ class SelectState extends FlxState {
 
 	private var _errText:FlxText;
 	private var _waitingPlayers:Bool;
+	private var _serverIpAddr:String;
 
 
-	public function new(player:PlayerConfig) {
+	public function new(player:PlayerConfig, serverIp:String) {
 		_player = player;
+		_serverIpAddr = serverIp;
 
 		super();
 	}
@@ -123,7 +125,7 @@ class SelectState extends FlxState {
 		player2.setCharacter(selected.character);
 
 		FlxG.cameras.fade(FlxColor.BLACK, 1, false, function() {
-			FlxG.switchState(new PlayState(_player, player2));
+			FlxG.switchState(new PlayState(_player, player2, _serverIpAddr));
 		});
 	}
 

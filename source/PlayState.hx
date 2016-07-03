@@ -19,6 +19,9 @@ class PlayState extends FlxState
 	private var _playerConfig:PlayerConfig;
 	private var _playerConfigOther:PlayerConfig;
 
+	private var _serverIpAddr = "localhost";
+	private var _remoteConnection:sys.net.Socket;
+
 	public var player1:FlxSprite;
 	public var player2:FlxSprite;
 	private var _sprPlayer:Player;
@@ -26,11 +29,12 @@ class PlayState extends FlxState
 	private var _healthBar:FlxBar;
     var numCollisions:Int = 0;
 
-	public function new(player:PlayerConfig, otherPlayer:PlayerConfig) {
+	public function new(player:PlayerConfig, otherPlayer:PlayerConfig, serverIp:String) {
 		super();
 
 		_playerConfig = player;
 		_playerConfigOther = otherPlayer;
+		_serverIpAddr = serverIp;
 	}
 
 	override public function create():Void
@@ -53,7 +57,16 @@ class PlayState extends FlxState
 		trace("You are ", _playerConfig.getCharacter());
 		trace("Enemy is ", _playerConfigOther.getCharacter());
 
-		_playerConfigOther.setConnection(_playerConfig.getConnection());
+		try {
+			_remoteConnection = new sys.net.Socket();
+			_remoteConnection.connect(new sys.net.Host(_serverIpAddr), 5000);
+
+			_playerConfigOther.setConnection(_remoteConnection);
+
+			sendRemotePlayerInfo();
+		} catch(msg:String) {
+			trace("ERROR", msg);
+		}
 
 		if (_playerConfig.isLeft()) {
 			addLeftPlayer(_playerConfig);
@@ -64,6 +77,15 @@ class PlayState extends FlxState
 		}
 
 		super.create();
+	}
+
+    private function sendRemotePlayerInfo() {
+		var data:String = '{"player": "' + _playerConfigOther.getName() + '", "action": "getinfo"}';
+		try {
+			_remoteConnection.write(data + "\n");
+		} catch(msg:String) {
+			trace("ERROR", msg);
+		}
 	}
 
 	private function addLeftPlayer(player:PlayerConfig) {
