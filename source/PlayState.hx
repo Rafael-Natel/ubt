@@ -53,6 +53,8 @@ class PlayState extends FlxState
 		trace("You are ", _playerConfig.getCharacter());
 		trace("Enemy is ", _playerConfigOther.getCharacter());
 
+		_playerConfigOther.setConnection(_playerConfig.getConnection());
+
 		if (_playerConfig.isLeft()) {
 			addLeftPlayer(_playerConfig);
 			addRightRemote(_playerConfigOther);
@@ -66,9 +68,9 @@ class PlayState extends FlxState
 
 	private function addLeftPlayer(player:PlayerConfig) {
 		if (player.getCharacter() == "max") {
-			player1 = new MaxPlayer(300, 200, RIGHT);
+			player1 = new MaxPlayer(300, 200, RIGHT, player.getConnection());
 		} else {
-			player1 = new DraxPlayer(300, 200, RIGHT);
+			player1 = new DraxPlayer(300, 200, RIGHT, player.getConnection());
 		}
 
 		add(player1);
@@ -76,9 +78,9 @@ class PlayState extends FlxState
 
 	private function addRightPlayer(player:PlayerConfig) {
 		if (player.getCharacter() == "max") {
-			player2 = new MaxPlayer(600, 200, LEFT);
+			player2 = new MaxPlayer(600, 200, LEFT, player.getConnection());
 		} else {
-			player2 = new DraxPlayer(600, 200, LEFT);
+			player2 = new DraxPlayer(600, 200, LEFT, player.getConnection());
 		}
 
 		add(player2);
@@ -95,7 +97,7 @@ class PlayState extends FlxState
 	}
 
 	private function addRightRemote(player:PlayerConfig) {
-		if (player.getCharacter() == "drax") {
+		if (player.getCharacter() == "max") {
 			player2 = new MaxRemote(600, 200, LEFT, player.getConnection());
 		} else {
 			player2 = new DraxRemote(600, 200, LEFT, player.getConnection());

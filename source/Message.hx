@@ -19,3 +19,9 @@ typedef ConnectMessage = {
 	var code:UInt;
 	var left:Bool;
 }
+
+typedef PlayerInfo = {
+	var x:Float;
+	var y:Float;
+	var action:String;
+}

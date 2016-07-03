@@ -1,8 +1,8 @@
 import Player;
 
 class MaxPlayer extends Player {
-	public function new(X:Int, Y:Int, state:State) {
-		super(X, Y, state);
+	public function new(X:Int, Y:Int, state:State, connection:sys.net.Socket) {
+		super(X, Y, state, connection);
 
 		//Set up the graphics
 		loadGraphic("assets/art/sprite25.png", true, 354, 449);

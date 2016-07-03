@@ -7,6 +7,9 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import haxe.Json;
+
+import Message;
 
 enum State {
 	LEFT;
@@ -28,12 +31,14 @@ class Player extends FlxSprite
 
     private var _parent:PlayState;
 	private var _state:State;
+	private var _connection:sys.net.Socket;
 
-	public function new(X:Int, Y:Int, state:State)
+	public function new(X:Int, Y:Int, state:State, connection:sys.net.Socket)
 	{
 		// X,Y: Starting coordinates
 		super(X, Y);
 
+		_connection = connection;
 		_state = state;
 
 		animation.callback = function(name:String, frameNum:Int, frameIndex:Int) {
@@ -46,6 +51,23 @@ class Player extends FlxSprite
 		//setSize(500, 100);
 		offset.set(3, 4);
 
+		var timer = new haxe.Timer(500);
+
+		timer.run = function() {
+			var data:PlayerInfo = {
+				x: this.x,
+				y: this.y,
+				action: ""
+			};
+
+			try {
+				var dataStr = Json.stringify(data);
+
+				connection.write(dataStr + "\n");
+			} catch(msg:String) {
+				trace("ERROR:", msg);
+			}
+		};
 	}
 
 	private function safePositions() {

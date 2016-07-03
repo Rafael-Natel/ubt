@@ -178,6 +178,8 @@ class ConfigState extends FlxState
 				return false;
 			}
 
+			trace("got", recvMessage);
+
 			_playerIsLeft = connMessage.left;
 			return true;
 		} catch( msg : String ) {
