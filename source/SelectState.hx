@@ -121,7 +121,7 @@ class SelectState extends FlxState {
 		trace("Name: ", selected.player);
 		trace("Character: ", selected.character);
 
-		var player2:PlayerConfig = new PlayerConfig("player2");
+		var player2:PlayerConfig = new PlayerConfig(selected.player);
 		player2.setCharacter(selected.character);
 
 		FlxG.cameras.fade(FlxColor.BLACK, 1, false, function() {

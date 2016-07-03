@@ -9,6 +9,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import haxe.Json;
 import Player;
+import Message;
 
 typedef RemoteData = {
 	var x:Int;
@@ -38,6 +39,20 @@ class RemotePlayer extends FlxSprite
 		acceleration.y = GRAVITY;
 		//setSize(500, 100);
 		offset.set(3, 4);
+
+		var timer = new haxe.Timer(500);
+		timer.run = function() {
+			try {
+				var recvMessage:String = connection.input.readLine();
+				var dataObj:PlayerInfo = Json.parse(recvMessage);
+
+				this.x = dataObj.x;
+				this.y = dataObj.y;
+
+			} catch(msg:String) {
+				trace("ERROR:", msg);
+			}
+		};
 
 	}
 
