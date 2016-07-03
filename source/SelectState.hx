@@ -20,8 +20,15 @@ class SelectState extends FlxState {
 	private var _isBack:Bool;
 	private var _currentChar:Bool; // true == char1, false == char2;
 
+	private var _player:PlayerConfig;
+
+	public function new(player:PlayerConfig) {
+		_player = player;
+
+		super();
+	}
+
 	override public function create():Void {
-        
 		_base = new FlxSprite();
 		_base.loadGraphic("assets/art/TelaVersus.png");
 		add(_base);
@@ -80,6 +87,14 @@ class SelectState extends FlxState {
 
 	override public function update(elapsed:Float):Void
 	{
+		// var recvData:Bytes = _connection.input.readAll();
+		// 	var recvString:String = recvData.toString();
+
+		// 	var statusMessage:StatusMessage = Json.parse(recvString);
+
+		// 	if (statusMessage.code == ESUCCESS) {
+		// 		return true;
+		// 	}
 		if (_isBack) {
 			_pointer.y = _backText.y + 10;
 		} else {

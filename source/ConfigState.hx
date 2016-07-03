@@ -9,7 +9,11 @@ import flash.system.System;
 import openfl.Assets;
 import flixel.effects.particles.FlxEmitter;
 import flixel.addons.ui.FlxInputText;
+import haxe.io.Bytes;
+import haxe.Json;
 
+import Message;
+import PlayerConfig;
 
 enum Option
 {
@@ -42,6 +46,8 @@ class ConfigState extends FlxState
 
 	private var _playerName = "";
 	private var _serverIpAddr = "localhost";
+
+	private var _player:PlayerConfig;
 
 	override public function create():Void
 	{
@@ -120,7 +126,7 @@ class ConfigState extends FlxState
 			{
 				case CONNECT:
 					FlxG.sound.play(_menuFireSound + Reg.SoundExtension, 1, false);
-					FlxG.cameras.fade(0xff969867, 1, false, testConnection);
+					verifyAndGo();
 				case BACK:
 					FlxG.sound.play(_menuFireSound + Reg.SoundExtension, 1, false);
 					FlxG.cameras.fade(0xff969867, 1, false, backToMenu);
@@ -171,14 +177,30 @@ class ConfigState extends FlxState
 		return false;
 	}
 
-	private function testConnection():Void
-	{
+	private function goNext() {
+		_player = new PlayerConfig(_playerName);
+		_player.setConnection(_connection);
+
+		FlxG.switchState(new SelectState(_player));
+	}
+
+    private function verifyAndGo():Void {
+		if (testConnection()) {
+			FlxG.cameras.fade(0xff969867, 1, false, goNext);
+		} else {
+			// Show error message to user?
+		}
+	}
+
+	private function testConnection():Bool {
 		try {
-			_connection = new sys.net.Socket();
-			_connection.connect(new sys.net.Host(_serverIpAddr),5000);
+			if (_connection == null) {
+				_connection = new sys.net.Socket();
+				_connection.connect(new sys.net.Host(_serverIpAddr),5000);
+			}
 
 			if (sendPlayer()) {
-				FlxG.switchState(new SelectState());
+				return true;
 			} else {
 				trace("Failed to send player name");
 			}
@@ -186,6 +208,6 @@ class ConfigState extends FlxState
 			trace("Error occurred: " + msg);
 		}
 
-		FlxG.switchState(new SelectState());
+		return false;
 	}
 }
