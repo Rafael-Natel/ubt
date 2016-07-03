@@ -22,7 +22,7 @@ class PlayerConfig {
 	}
 
 	public function setIsLeft(l:Bool) {
-		return _isLeft;
+		_isLeft = l;
 	}
 
 	public function getName():String {
