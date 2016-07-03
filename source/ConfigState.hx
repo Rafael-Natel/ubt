@@ -45,6 +45,7 @@ class ConfigState extends FlxState
 	private var _connection:sys.net.Socket;
 
 	private var _playerName = "";
+	private var _playerIsLeft = false;
 	private var _serverIpAddr = "localhost";
 
 	private var _player:PlayerConfig;
@@ -169,6 +170,15 @@ class ConfigState extends FlxState
 
 		try {
 			_connection.write(data+"\n");
+
+			var recvMessage:String = _connection.input.readLine();
+			var connMessage:ConnectMessage = Json.parse(recvMessage);
+
+			if (connMessage.code != 1) {
+				return false;
+			}
+
+			_playerIsLeft = connMessage.left;
 			return true;
 		} catch( msg : String ) {
 			trace("Error occurred: " + msg);
@@ -180,6 +190,7 @@ class ConfigState extends FlxState
 	private function goNext() {
 		_player = new PlayerConfig(_playerName);
 		_player.setConnection(_connection);
+		_player.setIsLeft(_playerIsLeft);
 
 		FlxG.switchState(new SelectState(_player));
 	}

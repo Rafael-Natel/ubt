@@ -9,18 +9,29 @@ import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import flixel.util.FlxCollision;
 import flixel.ui.FlxBar;
 using flixel.util.FlxSpriteUtil;
+
+import PlayerConfig;
+
 class PlayState extends FlxState
 {
-
-
 	private var _baseY:Float;	// this is the starting Y position of our guy, we will use this to make the guy float up and down
 	private var _ground:FlxTileblock;
-	public var player1:Player;
-	public var player2:Player;
+	private var _playerConfig:PlayerConfig;
+	private var _playerConfigOther:PlayerConfig;
+
+	public var player1:FlxSprite;
+	public var player2:FlxSprite;
 	private var _sprPlayer:Player;
 	private var _base:FlxSprite;
 	private var _healthBar:FlxBar;
     var numCollisions:Int = 0;
+
+	public function new(player:PlayerConfig, otherPlayer:PlayerConfig) {
+		super();
+
+		_playerConfig = player;
+		_playerConfigOther = otherPlayer;
+	}
 
 	override public function create():Void
 	{
@@ -28,7 +39,7 @@ class PlayState extends FlxState
         _base = new FlxSprite();
 		_base.loadGraphic("assets/art/Cenario.png");
 		add(_base);
-        
+
         _healthBar = new FlxBar(2, 2, FlxBarFillDirection.LEFT_TO_RIGHT, 600, 60, _sprPlayer, "health", 0, 100, true);
 		_healthBar.createGradientBar([0xcc111111], [0xffff0000, 0xff00ff00], 1, 0, true, 0xcc333333);
 		_healthBar.scrollFactor.set();
@@ -39,10 +50,50 @@ class PlayState extends FlxState
 		_ground.loadTiles("assets/art/chao1.png", 1278, 200);
 		add(_ground);
 
+		if (_playerConfig.isLeft()) {
+			addLeftPlayer(_playerConfig);
+			addRightRemote(_playerConfigOther);
+		} else {
+			addLeftRemote(_playerConfigOther);
+			addRightPlayer(_playerConfig);
+		}
+
 		add(player1 = new Player(300, 200, RIGHT));
 		add(player2 = new Player(600, 200, LEFT));
 
 		super.create();
+	}
+
+	private function addLeftPlayer(player:PlayerConfig) {
+		if (player.getCharacter() == "max") {
+			player1 = new MaxPlayer(300, 200, RIGHT);
+		} else {
+			player1 = new DraxPlayer(300, 200, RIGHT);
+		}
+	}
+
+	private function addRightPlayer(player:PlayerConfig) {
+		if (player.getCharacter() == "max") {
+			player2 = new MaxPlayer(600, 200, LEFT);
+		} else {
+			player2 = new DraxPlayer(600, 200, LEFT);
+		}
+	}
+
+	private function addLeftRemote(player:PlayerConfig) {
+		if (player.getCharacter() == "max") {
+			player1 = new MaxRemote(300, 200, RIGHT, player.getConnection());
+		} else {
+			player1 = new DraxRemote(300, 200, RIGHT, player.getConnection());
+		}
+	}
+
+	private function addRightRemote(player:PlayerConfig) {
+		if (player.getCharacter() == "drax") {
+			player2 = new MaxRemote(600, 200, LEFT, player.getConnection());
+		} else {
+			player2 = new DraxRemote(600, 200, LEFT, player.getConnection());
+		}
 	}
 
 	override public function update(elapsed:Float):Void
@@ -61,4 +112,3 @@ class PlayState extends FlxState
     }
 
 	}
-

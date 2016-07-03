@@ -7,6 +7,11 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
 
+import haxe.io.Bytes;
+import haxe.Json;
+
+import Message;
+
 class SelectState extends FlxState {
 	private var _backText:FlxText;
 	private var _pointer:FlxSprite;
@@ -22,6 +27,10 @@ class SelectState extends FlxState {
 
 	private var _player:PlayerConfig;
 
+	private var _errText:FlxText;
+	private var _waitingPlayers:Bool;
+
+
 	public function new(player:PlayerConfig) {
 		_player = player;
 
@@ -33,10 +42,17 @@ class SelectState extends FlxState {
 		_base.loadGraphic("assets/art/TelaVersus.png");
 		add(_base);
 
+		_errText = new FlxText((FlxG.width/2)-200, 30, "Waiting for player2... ");
+		_errText.color = 0xFFCC00;
+		_errText.size = 25;
+		_errText.antialiasing = true;
+
 		setupBackBtn();
 
 		setupChar1Btn();
 		setupChar2Btn();
+
+		_currentChar = true;
 	}
 
 	private function setupBackBtn() {
@@ -79,22 +95,77 @@ class SelectState extends FlxState {
 		});
 	}
 
-	private function fadeAndStart() {
+	private function waitForPlayers() {
+		_waitingPlayers = true;
+
+		var connection = _player.getConnection();
+		connection.write('{"action": "waitForPlayers", "player": "' + _player.getName() + '"}');
+
+		var recvData:String = connection.input.readLine();
+
+		trace("got", recvData);
+
+		var selected:SelectMessage = Json.parse(recvData);
+
+		if (selected.code == 4) {
+			trace("NOT READY YET...", selected.status);
+
+			return;
+		}
+
+		var player2:PlayerConfig = new PlayerConfig("player2");
+		player2.setCharacter(selected.character);
+
 		FlxG.cameras.fade(FlxColor.BLACK, 1, false, function() {
-			FlxG.switchState(new PlayState());
+			FlxG.switchState(new PlayState(_player, player2));
 		});
+	}
+
+	private function sendSelectChar() {
+		var characterName:String;
+
+		if (_currentChar) {
+			characterName = "max";
+		} else {
+			characterName = "drax";
+		}
+
+		var dataMessage:String = '{"player": "' + _player.getName() + '", "character": "' + characterName + '"}';
+
+		var connection = _player.getConnection();
+
+		try {
+			connection.write(dataMessage+"\n");
+
+			trace("Selection of ", characterName, " sent");
+
+			add(_errText);
+
+			var recvData:String = connection.input.readLine();
+
+			trace("got", recvData);
+
+			var status:StatusMessage = Json.parse(recvData);
+
+			if (status.code == 1) {
+				waitForPlayers();
+			} else {
+				trace("ERROR", status.status);
+			}
+		} catch(msg:String) {
+			trace("ERROR:", msg);
+		}
 	}
 
 	override public function update(elapsed:Float):Void
 	{
-		// var recvData:Bytes = _connection.input.readAll();
-		// 	var recvString:String = recvData.toString();
+		if (_waitingPlayers) {
+			waitForPlayers();
+			super.update(elapsed);
+			return;
+		}
 
-		// 	var statusMessage:StatusMessage = Json.parse(recvString);
 
-		// 	if (statusMessage.code == ESUCCESS) {
-		// 		return true;
-		// 	}
 		if (_isBack) {
 			_pointer.y = _backText.y + 10;
 		} else {
@@ -121,7 +192,7 @@ class SelectState extends FlxState {
 			if (_isBack) {
 				gotoBack();
 			} else {
-				fadeAndStart();
+				sendSelectChar();
 			}
 		}
 
