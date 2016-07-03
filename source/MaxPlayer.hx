@@ -2,8 +2,6 @@ import Player;
 
 class MaxPlayer extends Player {
 	public function new(X:Int, Y:Int, state:State) {
-		super(X, Y, state);
-
 		//Set up the graphics
 		loadGraphic("assets/art/sprite25.png", true, 354, 449);
 //Andar, Atacar Fraco, Atacar Forte, Defesa, Pulo, Pulo Chute, Pulo Espada
@@ -27,5 +25,6 @@ class MaxPlayer extends Player {
         animation.add("jumb-sword-left", [274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287,288, 289, 290, 291, 292, 293], false);//293
         animation.add("jump-sword-right", [294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313], false);//313
 
+		super(X, Y, state);
 	}
 }

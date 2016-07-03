@@ -58,9 +58,6 @@ class PlayState extends FlxState
 			addRightPlayer(_playerConfig);
 		}
 
-		add(player1 = new Player(300, 200, RIGHT));
-		add(player2 = new Player(600, 200, LEFT));
-
 		super.create();
 	}
 
@@ -70,6 +67,8 @@ class PlayState extends FlxState
 		} else {
 			player1 = new DraxPlayer(300, 200, RIGHT);
 		}
+
+		add(player1);
 	}
 
 	private function addRightPlayer(player:PlayerConfig) {
@@ -78,6 +77,8 @@ class PlayState extends FlxState
 		} else {
 			player2 = new DraxPlayer(600, 200, LEFT);
 		}
+
+		add(player2);
 	}
 
 	private function addLeftRemote(player:PlayerConfig) {
@@ -86,6 +87,8 @@ class PlayState extends FlxState
 		} else {
 			player1 = new DraxRemote(300, 200, RIGHT, player.getConnection());
 		}
+
+		add(player1);
 	}
 
 	private function addRightRemote(player:PlayerConfig) {
@@ -94,6 +97,8 @@ class PlayState extends FlxState
 		} else {
 			player2 = new DraxRemote(600, 200, LEFT, player.getConnection());
 		}
+
+		add(player2);
 	}
 
 	override public function update(elapsed:Float):Void
