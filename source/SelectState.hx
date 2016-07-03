@@ -113,6 +113,12 @@ class SelectState extends FlxState {
 			return;
 		}
 
+		_waitingPlayers = false;
+
+		trace("WE'RE READY TO PLAY");
+		trace("Name: ", selected.player);
+		trace("Character: ", selected.character);
+
 		var player2:PlayerConfig = new PlayerConfig("player2");
 		player2.setCharacter(selected.character);
 

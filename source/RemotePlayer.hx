@@ -62,7 +62,7 @@ class RemotePlayer extends FlxSprite
 			}
 		}
 
-		updatePlayer();
+		//		updatePlayer();
 
 		safePositions();
 
