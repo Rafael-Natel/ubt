@@ -50,6 +50,9 @@ class PlayState extends FlxState
 		_ground.loadTiles("assets/art/chao1.png", 1278, 200);
 		add(_ground);
 
+		trace("You are ", _playerConfig.getCharacter());
+		trace("Enemy is ", _playerConfigOther.getCharacter());
+
 		if (_playerConfig.isLeft()) {
 			addLeftPlayer(_playerConfig);
 			addRightRemote(_playerConfigOther);

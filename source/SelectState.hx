@@ -136,7 +136,9 @@ class SelectState extends FlxState {
 			characterName = "drax";
 		}
 
-		var dataMessage:String = '{"player": "' + _player.getName() + '", "character": "' + characterName + '"}';
+		_player.setCharacter(characterName);
+
+		var dataMessage:String = '{"player": "' + _player.getName() + '", "character": "' + _player.getCharacter() + '"}';
 
 		var connection = _player.getConnection();
 
