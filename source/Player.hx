@@ -86,11 +86,9 @@ class Player extends FlxSprite
 		}
 	}
 
-	private function sendUpdates() {
-		var data:PlayerInfo = {
-			x: this.x,
-			y: this.y,
-			action: ""
+	private function sendKeyPressed(key:String) {
+		var data:KeyMessage = {
+			key: key
 		};
 
 		try {
@@ -102,18 +100,10 @@ class Player extends FlxSprite
 		} catch(msg:String) {
 			trace("ERROR:", msg);
 		}
-
 	}
 
 	public override function update(elapsed:Float):Void
 	{
-		var currentTime:Date = Date.now();
-
-		if (currentTime.getTime() > _lastTime.getTime() + 500) {
-			_lastTime = currentTime;
-			sendUpdates();
-		}
-
 		if (isFighting()) {
 			if (!animation.finished) {
 				super.update(elapsed);
@@ -126,10 +116,12 @@ class Player extends FlxSprite
 
 		if (FlxG.keys.anyPressed([LEFT]))
 		{
+			sendKeyPressed("left");
 			acceleration.x = -drag.x;
 		}
 		else if (FlxG.keys.anyPressed([RIGHT]))
 		{
+			sendKeyPressed("right");
 			acceleration.x = drag.x;
 		}
 
@@ -138,6 +130,8 @@ class Player extends FlxSprite
 		handleXMovement();
 
 		if (FlxG.keys.anyPressed([A])) {
+			sendKeyPressed("A");
+
 			if (isRight()) {
 				_state = PUNCH_RIGHT;
 				animation.play("punch-right");
@@ -147,6 +141,7 @@ class Player extends FlxSprite
 			 }
         }
         if (FlxG.keys.anyPressed([S])) {
+			sendKeyPressed("S");
             if (isRight()) {
                 _state = PUNCHSTRONG_RIGHT;
                 animation.play("punch-strong-right");
@@ -157,6 +152,8 @@ class Player extends FlxSprite
         }
 
         if (FlxG.keys.anyPressed([D])) {
+			sendKeyPressed("D");
+
             if (isRight()) {
                 _state = GUARD_RIGHT;
                 animation.play("guard-right");
