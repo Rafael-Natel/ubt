@@ -32,6 +32,7 @@ class Player extends FlxSprite
     private var _parent:PlayState;
 	private var _state:State;
 	private var _connection:sys.net.Socket;
+	private var _lastTime:Date;
 
 	public function new(X:Int, Y:Int, state:State, connection:sys.net.Socket)
 	{
@@ -51,23 +52,8 @@ class Player extends FlxSprite
 		//setSize(500, 100);
 		offset.set(3, 4);
 
-		var timer = new haxe.Timer(500);
+		_lastTime = Date.now();
 
-		timer.run = function() {
-			var data:PlayerInfo = {
-				x: this.x,
-				y: this.y,
-				action: ""
-			};
-
-			try {
-				var dataStr = Json.stringify(data);
-
-				connection.write(dataStr + "\n");
-			} catch(msg:String) {
-				trace("ERROR:", msg);
-			}
-		};
 	}
 
 	private function safePositions() {
@@ -100,8 +86,34 @@ class Player extends FlxSprite
 		}
 	}
 
+	private function sendUpdates() {
+		var data:PlayerInfo = {
+			x: this.x,
+			y: this.y,
+			action: ""
+		};
+
+		try {
+			var dataStr = Json.stringify(data);
+
+			trace("writing data", dataStr);
+
+			_connection.write(dataStr + "\n");
+		} catch(msg:String) {
+			trace("ERROR:", msg);
+		}
+
+	}
+
 	public override function update(elapsed:Float):Void
 	{
+		var currentTime:Date = Date.now();
+
+		if (currentTime.getTime() > _lastTime.getTime() + 500) {
+			_lastTime = currentTime;
+			sendUpdates();
+		}
+
 		if (isFighting()) {
 			if (!animation.finished) {
 				super.update(elapsed);

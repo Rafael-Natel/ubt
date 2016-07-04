@@ -25,6 +25,7 @@ class RemotePlayer extends FlxSprite
 	private var _state:State;
 	private var _connection:sys.net.Socket;
 	private var _lastUpdate:Float = 0;
+	private var _lastTime:Date;
 
 	public function new(X:Int, Y:Int, state:State, connection:sys.net.Socket)
 	{
@@ -40,20 +41,7 @@ class RemotePlayer extends FlxSprite
 		//setSize(500, 100);
 		offset.set(3, 4);
 
-		var timer = new haxe.Timer(500);
-		timer.run = function() {
-			try {
-				var recvMessage:String = connection.input.readLine();
-				var dataObj:PlayerInfo = Json.parse(recvMessage);
-
-				this.x = dataObj.x;
-				this.y = dataObj.y;
-
-			} catch(msg:String) {
-				trace("ERROR:", msg);
-			}
-		};
-
+		_lastTime = Date.now();
 	}
 
 	private function safePositions() {
@@ -68,41 +56,32 @@ class RemotePlayer extends FlxSprite
 		}
 	}
 
+	private function updatePlayer() {
+		try {
+			var recvMessage:String = _connection.input.readLine();
+			var dataObj:PlayerInfo = Json.parse(recvMessage);
+
+			trace("remote received: ", recvMessage);
+
+			this.x = dataObj.x;
+			this.y = dataObj.y;
+
+		} catch(msg:String) {
+			trace("ERROR:", msg);
+		}
+	}
+
 	public override function update(elapsed:Float):Void
 	{
-		if (isFighting()) {
-			if (!animation.finished) {
-				super.update(elapsed);
-				return;
-			}
+		var currentTime:Date = Date.now();
+
+		if (currentTime.getTime() > _lastTime.getTime() + 500) {
+			_lastTime = currentTime;
+			updatePlayer();
 		}
-
-		//		updatePlayer();
-
-		safePositions();
 
 		super.update(elapsed);
 	}
-
-    private function updatePlayer():Void {
-		var curTime:Float = Sys.time();
-
-		trace(curTime);
-
-		if (curTime > (Std.int(_lastUpdate) + 100*1000)) {
-			_lastUpdate = curTime;
-
-			try {
-				var data:String = _connection.input.readLine();
-				var dataObject:RemoteData = Json.parse(data);
-
-				this.x = dataObject.x;
-				this.y = dataObject.y;
-			} catch(msg:String) {
-				trace("error", msg);
-			}
-		}
-    }
 
 	override public function kill():Void
 	{
