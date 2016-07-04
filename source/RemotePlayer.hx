@@ -119,7 +119,7 @@ class RemotePlayer extends FlxSprite
 
 		var key:String = "";
 
-		if (_lastTime.getTime() + 500 < currentTime.getTime()) {
+		if (_lastTime.getTime() + 1000 < currentTime.getTime()) {
 			key = getKeyPressed();
 		}
 

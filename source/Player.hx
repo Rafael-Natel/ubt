@@ -33,6 +33,7 @@ class Player extends FlxSprite
 	private var _state:State;
 	private var _connection:sys.net.Socket;
 	private var _lastTime:Date;
+	private var _keys:Array<String>;
 
 	public function new(X:Int, Y:Int, state:State, connection:sys.net.Socket)
 	{
@@ -53,6 +54,7 @@ class Player extends FlxSprite
 		offset.set(3, 4);
 
 		_lastTime = Date.now();
+		_keys = new Array<String>();
 
 	}
 
@@ -87,8 +89,22 @@ class Player extends FlxSprite
 	}
 
 	private function sendKeyPressed(key:String) {
+		var currentTime:Date = Date.now();
+
+		if (key != "") {
+			_keys.push(key);
+		}
+
+		if (_lastTime.getTime() + 1000 > currentTime.getTime()) {
+			return;
+		}
+
+		if (_keys.length == 0) {
+			return;
+		}
+
 		var data:KeyMessage = {
-			key: key
+			key: _keys.shift()
 		};
 
 		try {
@@ -104,6 +120,14 @@ class Player extends FlxSprite
 
 	public override function update(elapsed:Float):Void
 	{
+		var currentTime:Date = Date.now();
+
+		if (_lastTime.getTime() + 1000 < currentTime.getTime() && _keys.length > 0) {
+			sendKeyPressed("");
+			super.update(elapsed);
+			return;
+		}
+
 		if (isFighting()) {
 			if (!animation.finished) {
 				super.update(elapsed);
